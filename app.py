@@ -660,3 +660,5 @@ elif menu == "About":
 
     ### Business Insight
     The predictive model can help identify whether a production team is likely to **meet or fall short of its productivity target**, enabling more **data-driven decision making in manufacturing operations**.
+
+    """)
