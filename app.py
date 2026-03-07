@@ -301,26 +301,33 @@ elif menu == "Data Exploration":
     eda_df["department"] = eda_df["department"].replace({"sweing": "sewing"})
 
     # filters
-    st.subheader("Filters")
-    colf1, colf2 = st.columns(2)
+   st.subheader("Filters")
+colf1, colf2, colf3 = st.columns(3)
 
-    with colf1:
-        dept_options = ["All"] + sorted(eda_df["department"].dropna().unique().tolist())
-        dept_filter = st.selectbox("Select Department", dept_options)
+with colf1:
+    dept_options = ["All"] + sorted(eda_df["department"].dropna().unique().tolist())
+    dept_filter = st.selectbox("Select Department", dept_options)
 
-    with colf2:
-        quarter_options = ["All"] + sorted(eda_df["quarter"].dropna().unique().tolist())
-        quarter_filter = st.selectbox("Select Quarter", quarter_options)
+with colf2:
+    quarter_options = ["All"] + sorted(eda_df["quarter"].dropna().unique().tolist())
+    quarter_filter = st.selectbox("Select Quarter", quarter_options)
 
-    filtered_df = eda_df.copy()
+with colf3:
+    day_options = ["All"] + sorted(eda_df["day"].dropna().unique().tolist())
+    day_filter = st.selectbox("Select Day", day_options)
 
-    if dept_filter != "All":
-        filtered_df = filtered_df[filtered_df["department"] == dept_filter]
+filtered_df = eda_df.copy()
 
-    if quarter_filter != "All":
-        filtered_df = filtered_df[filtered_df["quarter"] == quarter_filter]
+if dept_filter != "All":
+    filtered_df = filtered_df[filtered_df["department"] == dept_filter]
 
-    st.write(f"Showing {len(filtered_df)} records")
+if quarter_filter != "All":
+    filtered_df = filtered_df[filtered_df["quarter"] == quarter_filter]
+
+if day_filter != "All":
+    filtered_df = filtered_df[filtered_df["day"] == day_filter]
+
+st.write(f"Showing {len(filtered_df)} records")
 
     fig, ax = plt.subplots(figsize=(8, 4))
     sns.histplot(filtered_df["actual_productivity"], bins=30, kde=True, ax=ax)
