@@ -660,11 +660,3 @@ elif menu == "About":
 
     ### Business Insight
     The predictive model can help identify whether a production team is likely to **meet or fall short of its productivity target**, enabling more **data-driven decision making in manufacturing operations**.
-
-    ---
-    **Course:** BMDS2003 Data Science  
-    **Faculty:** Faculty of Computing and Information Technology  
-    **University:** Tunku Abdul Rahman University of Management and Technology
-
-    *(Add your group number, names, and student IDs here before submission.)*
-    """)
