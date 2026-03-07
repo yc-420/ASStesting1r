@@ -423,7 +423,11 @@ elif menu == "Single Prediction":
         department = st.selectbox("Department", ["finishing", "sewing"])
         day = st.selectbox("Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"])
 
-    model_choice = st.selectbox("Prediction Model", ["Linear Regression", "Ridge Regression", "Decision Tree", "Random Forest"], index=3)
+    model_choice = st.selectbox(
+        "Prediction Model",
+        ["Linear Regression", "Ridge Regression", "Decision Tree", "Random Forest"],
+        index=3
+    )
 
     raw = {
         "team": team,
@@ -443,32 +447,34 @@ elif menu == "Single Prediction":
 
     pred_df = pd.DataFrame([raw])
     pred_df = pd.get_dummies(pred_df, columns=["quarter", "department", "day"], drop_first=True)
+
     for c in feature_cols:
         if c not in pred_df.columns:
             pred_df[c] = 0
+
     pred_df = pred_df[feature_cols].replace({True: 1, False: 0})
 
-  if st.button("Predict"):
-    model = best_models[model_choice]
-    pred = float(model.predict(pred_df)[0])
+    if st.button("Predict"):
+        model = best_models[model_choice]
+        pred = float(model.predict(pred_df)[0])
 
-    st.metric("Predicted actual_productivity", f"{pred:.4f}")
-    st.dataframe(pd.DataFrame([raw]), use_container_width=True)
+        st.metric("Predicted actual_productivity", f"{pred:.4f}")
+        st.dataframe(pd.DataFrame([raw]), use_container_width=True)
 
-    target = targeted_productivity
-    gap = pred - target
+        target = targeted_productivity
+        gap = pred - target
 
-    st.write("### Productivity Comparison")
-    st.write(f"Target Productivity: {target:.3f} ({target*100:.2f}%)")
-    st.write(f"Predicted Productivity: {pred:.3f} ({pred*100:.2f}%)")
-    st.write(f"Performance Gap: {gap:.3f}")
+        st.write("### Productivity Comparison")
+        st.write(f"Target Productivity: {target:.3f} ({target*100:.2f}%)")
+        st.write(f"Predicted Productivity: {pred:.3f} ({pred*100:.2f}%)")
+        st.write(f"Performance Gap: {gap:.3f}")
 
-    if pred >= target:
-        st.success("Status: On Track / Overachievement")
-        st.info("The team is likely to achieve or exceed the targeted productivity.")
-    else:
-        st.warning("Status: Under Target")
-        st.info("The team may not reach the targeted productivity under the current production conditions.")
+        if pred >= target:
+            st.success("Status: On Track / Overachievement")
+            st.info("The team is likely to achieve or exceed the targeted productivity.")
+        else:
+            st.warning("Status: Under Target")
+            st.info("The team may not reach the targeted productivity under the current production conditions.")
         
 elif menu == "Batch Prediction":
     st.header("Batch Prediction")
