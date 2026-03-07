@@ -302,9 +302,8 @@ elif menu == "Data Exploration":
 
     # filters
     st.subheader("Filters")
-    
     colf1, colf2, colf3 = st.columns(3)
-    
+
     with colf1:
         dept_options = ["All"] + sorted(eda_df["department"].dropna().unique().tolist())
         dept_filter = st.selectbox("Select Department", dept_options)
@@ -316,19 +315,23 @@ elif menu == "Data Exploration":
     with colf3:
         day_options = ["All"] + sorted(eda_df["day"].dropna().unique().tolist())
         day_filter = st.selectbox("Select Day", day_options)
-        
-        filtered_df = eda_df.copy()
-        
-        if dept_filter != "All":
-            filtered_df = filtered_df[filtered_df["department"] == dept_filter]
-            
-        if quarter_filter != "All":
-            filtered_df = filtered_df[filtered_df["quarter"] == quarter_filter]
-            
-        if day_filter != "All":
-            filtered_df = filtered_df[filtered_df["day"] == day_filter]
 
-st.write(f"Showing {len(filtered_df)} records")
+    filtered_df = eda_df.copy()
+
+    if dept_filter != "All":
+        filtered_df = filtered_df[filtered_df["department"] == dept_filter]
+
+    if quarter_filter != "All":
+        filtered_df = filtered_df[filtered_df["quarter"] == quarter_filter]
+
+    if day_filter != "All":
+        filtered_df = filtered_df[filtered_df["day"] == day_filter]
+
+    st.write(f"Showing {len(filtered_df)} records")
+
+    if filtered_df.empty:
+        st.warning("No data available for the selected filters.")
+        st.stop()
 
     fig, ax = plt.subplots(figsize=(8, 4))
     sns.histplot(filtered_df["actual_productivity"], bins=30, kde=True, ax=ax)
@@ -351,6 +354,7 @@ st.write(f"Showing {len(filtered_df)} records")
         )
         ax.set_title("Targeted vs Actual Productivity")
         st.pyplot(fig)
+
     with col2:
         fig, ax = plt.subplots(figsize=(5, 3.5))
         sns.scatterplot(
@@ -373,6 +377,7 @@ st.write(f"Showing {len(filtered_df)} records")
         )
         ax.set_title("Workers vs Actual Productivity")
         st.pyplot(fig)
+
     with col2:
         fig, ax = plt.subplots(figsize=(5, 3.5))
         sns.scatterplot(
@@ -395,6 +400,7 @@ st.write(f"Showing {len(filtered_df)} records")
         )
         ax.set_title("Actual Productivity by Department")
         st.pyplot(fig)
+
     with col2:
         fig, ax = plt.subplots(figsize=(5, 3.5))
         sns.boxplot(
@@ -411,7 +417,7 @@ st.write(f"Showing {len(filtered_df)} records")
         x="day",
         y="actual_productivity",
         data=filtered_df,
-        order=["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"],
+        order=["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
         ax=ax,
     )
     ax.set_title("Actual Productivity by Day")
