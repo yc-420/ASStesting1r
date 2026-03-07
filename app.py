@@ -301,20 +301,21 @@ elif menu == "Data Exploration":
     eda_df["department"] = eda_df["department"].replace({"sweing": "sewing"})
 
     # filters
-   st.subheader("Filters")
-colf1, colf2, colf3 = st.columns(3)
+      st.subheader("Filters")
 
-with colf1:
-    dept_options = ["All"] + sorted(eda_df["department"].dropna().unique().tolist())
-    dept_filter = st.selectbox("Select Department", dept_options)
+    colf1, colf2, colf3 = st.columns(3)
 
-with colf2:
-    quarter_options = ["All"] + sorted(eda_df["quarter"].dropna().unique().tolist())
-    quarter_filter = st.selectbox("Select Quarter", quarter_options)
+    with colf1:
+        dept_options = ["All"] + sorted(eda_df["department"].dropna().unique().tolist())
+        dept_filter = st.selectbox("Select Department", dept_options)
 
-with colf3:
-    day_options = ["All"] + sorted(eda_df["day"].dropna().unique().tolist())
-    day_filter = st.selectbox("Select Day", day_options)
+    with colf2:
+        quarter_options = ["All"] + sorted(eda_df["quarter"].dropna().unique().tolist())
+        quarter_filter = st.selectbox("Select Quarter", quarter_options)
+
+    with colf3:
+        day_options = ["All"] + sorted(eda_df["day"].dropna().unique().tolist())
+        day_filter = st.selectbox("Select Day", day_options)
 
 filtered_df = eda_df.copy()
 
