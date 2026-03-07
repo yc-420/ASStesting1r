@@ -558,44 +558,110 @@ elif menu == "Single Prediction":
         
 elif menu == "Batch Prediction":
     st.header("Batch Prediction")
-    st.write("Upload a CSV file containing production records for batch prediction.")
+    st.write(
+        "Upload a CSV file containing new garment production records for batch prediction. "
+        "The uploaded file must follow the same input structure as the training data."
+    )
+
+    required_cols = [
+        "team", "targeted_productivity", "smv", "wip", "over_time", "incentive",
+        "idle_time", "idle_men", "no_of_style_change", "no_of_workers",
+        "quarter", "department", "day"
+    ]
+
+    st.subheader("Required Input Columns")
+    st.code(", ".join(required_cols))
+
+    template_df = pd.DataFrame([{
+        "team": 8,
+        "targeted_productivity": 0.80,
+        "smv": 26.16,
+        "wip": 1108,
+        "over_time": 7080,
+        "incentive": 98,
+        "idle_time": 0,
+        "idle_men": 0,
+        "no_of_style_change": 0,
+        "no_of_workers": 59,
+        "quarter": "Quarter1",
+        "department": "sewing",
+        "day": "Monday"
+    }])
+
+    st.subheader("Sample Input Format")
+    st.dataframe(template_df, use_container_width=True)
+
+    st.download_button(
+        "Download Sample Template",
+        template_df.to_csv(index=False).encode("utf-8"),
+        file_name="batch_prediction_template.csv",
+        mime="text/csv",
+    )
+
     uploaded = st.file_uploader("Upload CSV", type=["csv"])
-    model_choice = st.selectbox("Model for Batch Prediction", ["Linear Regression", "Ridge Regression", "Decision Tree", "Random Forest"], index=3)
+    model_choice = st.selectbox(
+        "Model for Batch Prediction",
+        ["Linear Regression", "Ridge Regression", "Decision Tree", "Random Forest"],
+        index=3
+    )
 
     if uploaded is not None:
         batch_df = pd.read_csv(uploaded)
+
         st.subheader("Uploaded Data Preview")
         st.dataframe(batch_df.head(), use_container_width=True)
 
         batch_df.columns = batch_df.columns.str.strip()
+
         if "day" not in batch_df.columns and "date" in batch_df.columns:
             batch_df["date"] = pd.to_datetime(batch_df["date"], errors="coerce")
             batch_df["day"] = batch_df["date"].dt.day_name()
+
         if "department" in batch_df.columns:
-            batch_df["department"] = batch_df["department"].astype(str).str.strip().str.lower().replace({"sweing": "sewing"})
+            batch_df["department"] = (
+                batch_df["department"]
+                .astype(str)
+                .str.strip()
+                .str.lower()
+                .replace({"sweing": "sewing"})
+            )
+
         if "wip" in batch_df.columns:
             batch_df["wip"] = batch_df["wip"].fillna(0)
 
-        keep_cols = [
-            "team", "targeted_productivity", "smv", "wip", "over_time", "incentive",
-            "idle_time", "idle_men", "no_of_style_change", "no_of_workers", "quarter",
-            "department", "day"
-        ]
-        missing_required = [c for c in keep_cols if c not in batch_df.columns]
+        missing_required = [c for c in required_cols if c not in batch_df.columns]
+
         if missing_required:
-            st.error(f"Missing required columns: {missing_required}")
+            st.error(
+                "The uploaded file does not match the required input format. "
+                f"Missing columns: {missing_required}"
+            )
+            st.info(
+                "Please use the sample template provided above and ensure all required columns are included."
+            )
         else:
-            pred_input = batch_df[keep_cols].copy()
-            pred_input = pd.get_dummies(pred_input, columns=["quarter", "department", "day"], drop_first=True)
+            pred_input = batch_df[required_cols].copy()
+            pred_input = pd.get_dummies(
+                pred_input,
+                columns=["quarter", "department", "day"],
+                drop_first=True
+            )
+
             for c in feature_cols:
                 if c not in pred_input.columns:
                     pred_input[c] = 0
+
             pred_input = pred_input[feature_cols].replace({True: 1, False: 0})
 
             model = best_models[model_choice]
             batch_df["predicted_actual_productivity"] = model.predict(pred_input)
+
             st.subheader("Prediction Results")
             st.dataframe(batch_df.head(20), use_container_width=True)
+
+            avg_pred = float(batch_df["predicted_actual_productivity"].mean())
+            st.metric("Average Predicted Productivity", f"{avg_pred:.4f}")
+
             st.download_button(
                 "Download Results CSV",
                 batch_df.to_csv(index=False).encode("utf-8"),
