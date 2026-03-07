@@ -563,12 +563,6 @@ elif menu == "Batch Prediction":
         "The uploaded file must follow the same input structure as the training data."
     )
 
-    required_cols = [
-        "team", "targeted_productivity", "smv", "wip", "over_time", "incentive",
-        "idle_time", "idle_men", "no_of_style_change", "no_of_workers",
-        "quarter", "department", "day"
-    ]
-
     st.subheader("Required Input Columns")
     st.code(", ".join(required_cols))
 
