@@ -454,6 +454,23 @@ elif menu == "Single Prediction":
         st.metric("Predicted actual_productivity", f"{pred:.4f}")
         st.dataframe(pd.DataFrame([raw]), use_container_width=True)
 
+target = targeted_productivity
+pred = pred
+
+st.write("### Productivity Comparison")
+
+st.write(f"Target Productivity: {target:.3f}")
+st.write(f"Predicted Productivity: {pred:.3f}")
+
+gap = pred - target
+
+st.write(f"Performance Gap: {gap:.3f}")
+
+if pred >= target:
+    st.success("Team is likely to achieve or exceed the target productivity.")
+else:
+    st.warning("Team may not reach the target productivity.")
+
 elif menu == "Batch Prediction":
     st.header("Batch Prediction")
     st.write("Upload a CSV file containing production records for batch prediction.")
