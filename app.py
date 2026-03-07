@@ -437,7 +437,13 @@ elif menu == "Data Exploration":
         )
         ax.set_title("Idle Time vs Actual Productivity")
         st.pyplot(fig)
-        
+
+best_model = results_df.sort_values("RMSE").iloc[0]
+
+st.success(
+    f"Best Performing Model: {best_model['Model']} "
+    f"(RMSE = {best_model['RMSE']:.4f}, R² = {best_model['R2']:.4f})"
+)        
 elif menu == "Model Performance":
     st.header("Model Performance")
     display_df = results_df.copy()
