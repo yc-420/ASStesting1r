@@ -605,17 +605,66 @@ elif menu == "Batch Prediction":
 
 elif menu == "About":
     st.header("About This Project")
-    st.write(
-        "This dashboard was built for the BMDS2003 Data Science group assignment using the "
-        "Garment Worker Productivity dataset."
-    )
-    st.markdown(
-        "**Methods included**: Data cleaning, exploratory data analysis, baseline regression, "
-        "Linear Regression, Ridge Regression, Decision Tree Regressor, Random Forest Regressor, "
-        "cross validation, and hyperparameter tuning."
-    )
-    st.markdown(
-        "**CRISP-DM flow**: Business Understanding -> Data Understanding -> Data Preparation -> "
-        "Modeling -> Evaluation -> Deployment Prototype."
-    )
-    st.write("You can edit this section with your group number, names, IDs, and final findings before submission.")
+
+    st.markdown("""
+    ### Garment Worker Productivity Dashboard
+
+    This interactive dashboard was developed as part of the **BMDS2003 Data Science group assignment** at  
+    **Tunku Abdul Rahman University of Management and Technology (TARUMT)**.
+
+    The goal of this project is to apply **data science and machine learning techniques** to analyse and predict  
+    **garment worker productivity** using operational production data.
+
+    ### Project Objective
+    The main objective is to predict **actual productivity** of garment worker teams based on production conditions such as:
+    - team size
+    - overtime
+    - incentives
+    - work-in-progress (WIP)
+    - department and production quarter
+
+    By predicting productivity levels, production managers can evaluate whether current working conditions are sufficient to meet productivity targets.
+
+    ### Dataset
+    The project uses the **Garment Worker Productivity dataset**, which contains production records of garment factory teams including:
+    - production targets
+    - workforce size
+    - department information
+    - overtime and incentive data
+    - actual productivity levels
+
+    ### Data Science Methods Used
+    The following techniques were applied in this project:
+
+    - Data cleaning and preprocessing
+    - Exploratory Data Analysis (EDA)
+    - Baseline model using Dummy Regressor
+    - Linear Regression
+    - Ridge Regression
+    - Decision Tree Regressor
+    - Random Forest Regressor
+    - Model evaluation using **MAE, RMSE, and R²**
+    - **5-Fold Cross Validation**
+    - **Hyperparameter tuning using GridSearchCV**
+
+    ### CRISP-DM Framework
+    This project follows the **CRISP-DM (Cross Industry Standard Process for Data Mining)** methodology:
+
+    **Business Understanding → Data Understanding → Data Preparation → Modeling → Evaluation → Deployment**
+
+    ### Deployment Prototype
+    The final prototype was implemented using **Streamlit**, allowing users to:
+    - explore the dataset
+    - analyse model performance
+    - generate productivity predictions interactively
+
+    ### Business Insight
+    The predictive model can help identify whether a production team is likely to **meet or fall short of its productivity target**, enabling more **data-driven decision making in manufacturing operations**.
+
+    ---
+    **Course:** BMDS2003 Data Science  
+    **Faculty:** Faculty of Computing and Information Technology  
+    **University:** Tunku Abdul Rahman University of Management and Technology
+
+    *(Add your group number, names, and student IDs here before submission.)*
+    """)
