@@ -286,77 +286,81 @@ if menu == "Overview":
 elif menu == "Data Exploration":
     st.header("Data Exploration")
 
-    fig, ax = plt.subplots(figsize=(8, 4))
-    sns.histplot(raw_df["actual_productivity"], bins=30, kde=True, ax=ax)
-    ax.set_title("Distribution of Actual Productivity")
-    st.pyplot(fig)
+    raw_df = pd.read_csv("garments_worker_productivity.csv")
 
-    fig, ax = plt.subplots(figsize=(8, 4))
-    sns.boxplot(x=raw_df["actual_productivity"], ax=ax)
-    ax.set_title("Boxplot of Actual Productivity")
-    st.pyplot(fig)
+    raw_df["date"] = pd.to_datetime(raw_df["date"])
+    raw_df["day"] = raw_df["date"].dt.day_name()
 
-    col1, col2 = st.columns(2)
-    with col1:
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.scatterplot(x="targeted_productivity", y="actual_productivity", data=raw_df, ax=ax)
-        ax.set_title("Targeted vs Actual Productivity")
-        st.pyplot(fig)
-    with col2:
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.scatterplot(x="over_time", y="actual_productivity", data=raw_df, ax=ax)
-        ax.set_title("Over Time vs Actual Productivity")
-        st.pyplot(fig)
+    # ---------------- FILTER ----------------
+    st.subheader("Filters")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.scatterplot(x="no_of_workers", y="actual_productivity", data=raw_df, ax=ax)
-        ax.set_title("Workers vs Actual Productivity")
-        st.pyplot(fig)
-    with col2:
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.scatterplot(x="incentive", y="actual_productivity", data=raw_df, ax=ax)
-        ax.set_title("Incentive vs Actual Productivity")
-        st.pyplot(fig)
-
-    col1, col2 = st.columns(2)
-    with col1:
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.boxplot(x="department", y="actual_productivity", data=raw_df, ax=ax)
-        ax.set_title("Actual Productivity by Department")
-        st.pyplot(fig)
-    with col2:
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.boxplot(x="quarter", y="actual_productivity", data=raw_df, ax=ax)
-        ax.set_title("Actual Productivity by Quarter")
-        st.pyplot(fig)
-
-    fig, ax = plt.subplots(figsize=(10, 4))
-    sns.boxplot(
-        x="day",
-        y="actual_productivity",
-        data=raw_df,
-        order=["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"],
-        ax=ax,
+    dept_filter = st.selectbox(
+        "Select Department",
+        ["All"] + sorted(raw_df["department"].unique())
     )
-    ax.set_title("Actual Productivity by Day")
-    ax.tick_params(axis="x", rotation=30)
-    st.pyplot(fig)
 
-    fig, ax = plt.subplots(figsize=(10, 8))
-    numeric_df = raw_df.select_dtypes(include=[np.number])
-    sns.heatmap(numeric_df.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
-    ax.set_title("Correlation Heatmap")
-    st.pyplot(fig)
+    if dept_filter != "All":
+        df = raw_df[raw_df["department"] == dept_filter]
+    else:
+        df = raw_df
 
-    team_avg = raw_df.groupby("team")["actual_productivity"].mean().sort_values()
-    fig, ax = plt.subplots(figsize=(10, 5))
-    team_avg.plot(kind="bar", ax=ax)
-    ax.set_title("Average Actual Productivity by Team")
-    ax.set_xlabel("Team")
-    ax.set_ylabel("Average Actual Productivity")
-    st.pyplot(fig)
+    st.write(f"Showing {len(df)} records")
+
+    # ---------------- CHART 1 ----------------
+    st.subheader("Distribution of Actual Productivity")
+
+    fig1, ax1 = plt.subplots()
+    sns.histplot(df["actual_productivity"], bins=30, kde=True, ax=ax1)
+    st.pyplot(fig1)
+
+    # ---------------- CHART 2 ----------------
+    st.subheader("Targeted vs Actual Productivity")
+
+    fig2, ax2 = plt.subplots()
+    sns.scatterplot(
+        x="targeted_productivity",
+        y="actual_productivity",
+        data=df,
+        ax=ax2
+    )
+    st.pyplot(fig2)
+
+    # ---------------- CHART 3 ----------------
+    st.subheader("Overtime vs Productivity")
+
+    fig3, ax3 = plt.subplots()
+    sns.scatterplot(
+        x="over_time",
+        y="actual_productivity",
+        data=df,
+        ax=ax3
+    )
+    st.pyplot(fig3)
+
+    # ---------------- CHART 4 ----------------
+    st.subheader("Department Productivity Comparison")
+
+    fig4, ax4 = plt.subplots()
+    sns.boxplot(
+        x="department",
+        y="actual_productivity",
+        data=df,
+        ax=ax4
+    )
+    st.pyplot(fig4)
+
+    # ---------------- CHART 5 ----------------
+    st.subheader("Correlation Heatmap")
+
+    numeric_df = df.select_dtypes(include=[np.number])
+
+    fig5, ax5 = plt.subplots(figsize=(8,6))
+    sns.heatmap(
+        numeric_df.corr(),
+        cmap="coolwarm",
+        ax=ax5
+    )
+    st.pyplot(fig5)
 
 elif menu == "Model Performance":
     st.header("Model Performance")
