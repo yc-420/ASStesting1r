@@ -459,14 +459,16 @@ elif menu == "Single Prediction":
     gap = pred - target
 
     st.write("### Productivity Comparison")
-    st.write(f"Target Productivity: {target:.3f}")
-    st.write(f"Predicted Productivity: {pred:.3f}")
+    st.write(f"Target Productivity: {target:.3f} ({target*100:.2f}%)")
+    st.write(f"Predicted Productivity: {pred:.3f} ({pred*100:.2f}%)")
     st.write(f"Performance Gap: {gap:.3f}")
 
     if pred >= target:
-        st.success("Team is likely to achieve or exceed the target productivity.")
+        st.success("Status: On Track / Overachievement")
+        st.info("The team is likely to achieve or exceed the targeted productivity.")
     else:
-        st.warning("Team may not reach the target productivity.")
+        st.warning("Status: Under Target")
+        st.info("The team may not reach the targeted productivity under the current production conditions.")
         
 elif menu == "Batch Prediction":
     st.header("Batch Prediction")
