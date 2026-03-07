@@ -426,7 +426,8 @@ elif menu == "Data Exploration":
 
     fig, ax = plt.subplots(figsize=(9, 7))
     numeric_df = filtered_df.select_dtypes(include=[np.number])
-    sns.heatmap(numeric_df.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+    corr = numeric_df.corr()
+    sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
     ax.set_title("Correlation Heatmap")
     st.pyplot(fig)
 
@@ -445,6 +446,7 @@ elif menu == "Data Exploration":
             x="smv",
             y="actual_productivity",
             data=filtered_df,
+            alpha=0.6,
             ax=ax
         )
         ax.set_title("SMV vs Actual Productivity")
@@ -456,6 +458,7 @@ elif menu == "Data Exploration":
             x="idle_time",
             y="actual_productivity",
             data=filtered_df,
+            alpha=0.6,
             ax=ax
         )
         ax.set_title("Idle Time vs Actual Productivity")
@@ -556,7 +559,7 @@ elif menu == "Single Prediction":
         no_of_workers = st.number_input("No. of Workers", min_value=1.0, value=59.0)
         quarter = st.selectbox("Quarter", ["Quarter1", "Quarter2", "Quarter3", "Quarter4", "Quarter5"])
         department = st.selectbox("Department", ["finishing", "sewing"])
-        day = st.selectbox("Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"])
+        day = st.selectbox("Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"])
 
     model_choice = st.selectbox(
         "Prediction Model",
