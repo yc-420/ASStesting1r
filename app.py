@@ -438,17 +438,24 @@ elif menu == "Data Exploration":
         ax.set_title("Idle Time vs Actual Productivity")
         st.pyplot(fig)
 
-best_model = results_df.sort_values("RMSE").iloc[0]
-
-st.success(
-    f"Best Performing Model: {best_model['Model']} "
-    f"(RMSE = {best_model['RMSE']:.4f}, R² = {best_model['R2']:.4f})"
-)        
 elif menu == "Model Performance":
     st.header("Model Performance")
+
+    best_model = results_df.sort_values("RMSE").iloc[0]
+
+    st.success(
+        f"Best Performing Model: {best_model['Model']} "
+        f"(RMSE = {best_model['RMSE']:.4f}, R² = {best_model['R2']:.4f})"
+    )
+
+    st.info(
+        "The best model is selected based on the lowest RMSE and stronger R² performance."
+    )
+
     display_df = results_df.copy()
     for col in ["MAE", "RMSE", "R2", "CV_RMSE", "CV_R2"]:
         display_df[col] = display_df[col].round(4)
+
     st.dataframe(display_df, use_container_width=True)
 
     fig, ax = plt.subplots(figsize=(8, 4))
@@ -459,7 +466,7 @@ elif menu == "Model Performance":
 
     fig, ax = plt.subplots(figsize=(8, 4))
     sns.barplot(data=results_df, x="Model", y="R2", ax=ax)
-    ax.set_title("R2 Comparison Across Models")
+    ax.set_title("R² Comparison Across Models")
     ax.tick_params(axis="x", rotation=20)
     st.pyplot(fig)
 
@@ -469,14 +476,21 @@ elif menu == "Model Performance":
             "Feature": model_bundle["Xtrain"].columns,
             "Importance": rf_model.feature_importances_
         }).sort_values("Importance", ascending=False).head(15)
+
         fig, ax = plt.subplots(figsize=(9, 6))
         sns.barplot(data=fi, x="Importance", y="Feature", ax=ax)
         ax.set_title("Top 15 Feature Importances (Random Forest)")
         st.pyplot(fig)
 
-    selected_model = st.selectbox("Choose a model for Actual vs Predicted plot", list(model_bundle["predictions"].keys()), index=4)
+    selected_model = st.selectbox(
+        "Choose a model for Actual vs Predicted plot",
+        list(model_bundle["predictions"].keys()),
+        index=4
+    )
+
     ytest = model_bundle["ytest"]
     ypred = model_bundle["predictions"][selected_model]
+
     fig, ax = plt.subplots(figsize=(6, 6))
     ax.scatter(ytest, ypred, alpha=0.7)
     min_v = min(float(np.min(ytest)), float(np.min(ypred)))
