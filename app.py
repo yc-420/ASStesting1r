@@ -448,29 +448,26 @@ elif menu == "Single Prediction":
             pred_df[c] = 0
     pred_df = pred_df[feature_cols].replace({True: 1, False: 0})
 
-    if st.button("Predict"):
-        model = best_models[model_choice]
-        pred = float(model.predict(pred_df)[0])
-        st.metric("Predicted actual_productivity", f"{pred:.4f}")
-        st.dataframe(pd.DataFrame([raw]), use_container_width=True)
+  if st.button("Predict"):
+    model = best_models[model_choice]
+    pred = float(model.predict(pred_df)[0])
 
-target = targeted_productivity
-pred = pred
+    st.metric("Predicted actual_productivity", f"{pred:.4f}")
+    st.dataframe(pd.DataFrame([raw]), use_container_width=True)
 
-st.write("### Productivity Comparison")
+    target = targeted_productivity
+    gap = pred - target
 
-st.write(f"Target Productivity: {target:.3f}")
-st.write(f"Predicted Productivity: {pred:.3f}")
+    st.write("### Productivity Comparison")
+    st.write(f"Target Productivity: {target:.3f}")
+    st.write(f"Predicted Productivity: {pred:.3f}")
+    st.write(f"Performance Gap: {gap:.3f}")
 
-gap = pred - target
-
-st.write(f"Performance Gap: {gap:.3f}")
-
-if pred >= target:
-    st.success("Team is likely to achieve or exceed the target productivity.")
-else:
-    st.warning("Team may not reach the target productivity.")
-
+    if pred >= target:
+        st.success("Team is likely to achieve or exceed the target productivity.")
+    else:
+        st.warning("Team may not reach the target productivity.")
+        
 elif menu == "Batch Prediction":
     st.header("Batch Prediction")
     st.write("Upload a CSV file containing production records for batch prediction.")
