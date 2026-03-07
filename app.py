@@ -257,11 +257,20 @@ menu = st.sidebar.radio(
 
 if menu == "Overview":
     st.header("Project Overview")
+
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Rows", raw_df.shape[0])
     c2.metric("Columns", raw_df.shape[1])
     c3.metric("Missing WIP", int(raw_df["wip"].isna().sum()))
     c4.metric("Teams", int(raw_df["team"].nunique()))
+
+    best_model_row = results_df.sort_values("RMSE").iloc[0]
+
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Dataset Size", len(raw_df))
+    col2.metric("Features", raw_df.shape[1])
+    col3.metric("Best Model", best_model_row["Model"])
+    col4.metric("Best R²", f"{best_model_row['R2']:.4f}")
 
     st.subheader("Business Objective")
     st.write(
@@ -281,14 +290,6 @@ if menu == "Overview":
         "- Department value **sweing** was corrected to **sewing**.\n"
         "- **date** was converted to datetime and **day** was derived from date.\n"
         "- Categorical features were encoded using one-hot encoding for model training."
-    best_model_row = results_df.sort_values("RMSE").iloc[0]
-
-col1, col2, col3, col4 = st.columns(4)
-
-col1.metric("Dataset Size", len(raw_df))
-col2.metric("Features", raw_df.shape[1])
-col3.metric("Best Model", best_model_row["Model"])
-col4.metric("Best R²", f"{best_model_row['R2']:.4f}")
     )
 
 elif menu == "Data Exploration":
