@@ -584,6 +584,20 @@ elif menu == "Single Prediction":
         else:
             st.warning("Status: Under Target")
             st.info("The team may not reach the targeted productivity under the current production conditions.")
+
+residuals = ytest - ypred
+
+fig, ax = plt.subplots()
+
+sns.scatterplot(x=ypred, y=residuals, ax=ax)
+
+ax.axhline(0, linestyle="--", color="red")
+
+ax.set_xlabel("Predicted Values")
+ax.set_ylabel("Residuals")
+ax.set_title("Residual Plot")
+
+st.pyplot(fig)
         
 elif menu == "Batch Prediction":
     st.header("Batch Prediction")
