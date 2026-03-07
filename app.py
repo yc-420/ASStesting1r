@@ -559,12 +559,10 @@ elif menu == "Single Prediction":
 elif menu == "Batch Prediction":
     st.header("Batch Prediction")
     st.write(
-        "Upload a CSV file containing new garment production records for batch prediction. "
-        "The uploaded file must follow the same input structure as the training data."
+        "Upload a CSV file containing multiple garment production records to generate productivity predictions."
     )
 
-    st.subheader("Required Input Columns")
-    st.code(", ".join(required_cols))
+    st.subheader("Sample Input Format")
 
     template_df = pd.DataFrame([{
         "team": 8,
@@ -582,7 +580,6 @@ elif menu == "Batch Prediction":
         "day": "Monday"
     }])
 
-    st.subheader("Sample Input Format")
     st.dataframe(template_df, use_container_width=True)
 
     st.download_button(
@@ -623,18 +620,20 @@ elif menu == "Batch Prediction":
         if "wip" in batch_df.columns:
             batch_df["wip"] = batch_df["wip"].fillna(0)
 
-        missing_required = [c for c in required_cols if c not in batch_df.columns]
+        keep_cols = [
+            "team", "targeted_productivity", "smv", "wip", "over_time", "incentive",
+            "idle_time", "idle_men", "no_of_style_change", "no_of_workers",
+            "quarter", "department", "day"
+        ]
 
-        if missing_required:
-            st.error(
-                "The uploaded file does not match the required input format. "
-                f"Missing columns: {missing_required}"
-            )
-            st.info(
-                "Please use the sample template provided above and ensure all required columns are included."
-            )
+        missing_cols = [c for c in keep_cols if c not in batch_df.columns]
+
+        if missing_cols:
+            st.error("The uploaded file format does not match the required structure.")
+            st.info("Please use the sample template above.")
         else:
-            pred_input = batch_df[required_cols].copy()
+            pred_input = batch_df[keep_cols].copy()
+
             pred_input = pd.get_dummies(
                 pred_input,
                 columns=["quarter", "department", "day"],
@@ -648,13 +647,11 @@ elif menu == "Batch Prediction":
             pred_input = pred_input[feature_cols].replace({True: 1, False: 0})
 
             model = best_models[model_choice]
+
             batch_df["predicted_actual_productivity"] = model.predict(pred_input)
 
             st.subheader("Prediction Results")
             st.dataframe(batch_df.head(20), use_container_width=True)
-
-            avg_pred = float(batch_df["predicted_actual_productivity"].mean())
-            st.metric("Average Predicted Productivity", f"{avg_pred:.4f}")
 
             st.download_button(
                 "Download Results CSV",
@@ -662,7 +659,6 @@ elif menu == "Batch Prediction":
                 file_name="batch_prediction_results.csv",
                 mime="text/csv",
             )
-
 elif menu == "About":
     st.header("About This Project")
 
