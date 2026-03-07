@@ -301,10 +301,10 @@ elif menu == "Data Exploration":
     eda_df["department"] = eda_df["department"].replace({"sweing": "sewing"})
 
     # filters
-      st.subheader("Filters")
-
+    st.subheader("Filters")
+    
     colf1, colf2, colf3 = st.columns(3)
-
+    
     with colf1:
         dept_options = ["All"] + sorted(eda_df["department"].dropna().unique().tolist())
         dept_filter = st.selectbox("Select Department", dept_options)
@@ -316,17 +316,17 @@ elif menu == "Data Exploration":
     with colf3:
         day_options = ["All"] + sorted(eda_df["day"].dropna().unique().tolist())
         day_filter = st.selectbox("Select Day", day_options)
-
-filtered_df = eda_df.copy()
-
-if dept_filter != "All":
-    filtered_df = filtered_df[filtered_df["department"] == dept_filter]
-
-if quarter_filter != "All":
-    filtered_df = filtered_df[filtered_df["quarter"] == quarter_filter]
-
-if day_filter != "All":
-    filtered_df = filtered_df[filtered_df["day"] == day_filter]
+        
+        filtered_df = eda_df.copy()
+        
+        if dept_filter != "All":
+            filtered_df = filtered_df[filtered_df["department"] == dept_filter]
+            
+        if quarter_filter != "All":
+            filtered_df = filtered_df[filtered_df["quarter"] == quarter_filter]
+            
+        if day_filter != "All":
+            filtered_df = filtered_df[filtered_df["day"] == day_filter]
 
 st.write(f"Showing {len(filtered_df)} records")
 
