@@ -605,25 +605,26 @@ elif menu == "Single Prediction":
 
     pred_df = pred_df[feature_cols].replace({True: 1, False: 0})
 
-    if st.button("Predict"):
-        model = best_models[model_choice]
-        pred = float(model.predict(pred_df)[0])
-        
-        target = targeted_productivity
-        gap = pred - target
-        
-        st.write("### Prediction Result")
-        
-        metric1, metric2, metric3 = st.columns(3)
-        
-        with metric1:
-            st.metric("Target Productivity", f"{target:.3f}")
-        
-        with metric2:
-            st.metric("Predicted Productivity", f"{pred:.3f}")
-        
-        with metric3:
-            st.metric("Performance Gap", f"{gap:.3f}")
+if st.button("Predict"):
+
+    model = best_models[model_choice]
+    pred = float(model.predict(pred_df)[0])
+
+    target = targeted_productivity
+    gap = pred - target
+
+    st.write("### Prediction Result")
+
+    metric1, metric2, metric3 = st.columns(3)
+
+    with metric1:
+        st.metric("Target Productivity", f"{target:.3f}")
+
+    with metric2:
+        st.metric("Predicted Productivity", f"{pred:.3f}")
+
+    with metric3:
+        st.metric("Performance Gap", f"{gap:.3f}")
 
     if pred >= target:
         st.success("Status: On Track / Overachievement")
