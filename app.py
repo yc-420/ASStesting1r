@@ -327,17 +327,15 @@ elif menu == "Data Exploration":
     if day_filter != "All":
         filtered_df = filtered_df[filtered_df["day"] == day_filter]
 
-    st.write(f"Showing {len(filtered_df)} records")
-    
     if filtered_df.empty:
         st.warning("No data available for the selected filters.")
         st.stop()
-    
+
     colk1, colk2 = st.columns(2)
-    
+
     with colk1:
         st.metric("Filtered Records", len(filtered_df))
-    
+
     with colk2:
         st.metric(
             "Average Productivity",
@@ -361,8 +359,8 @@ elif menu == "Data Exploration":
             x="targeted_productivity",
             y="actual_productivity",
             data=filtered_df,
+            alpha=0.6,
             ax=ax
-            alpha=0.6
         )
         ax.set_title("Targeted vs Actual Productivity")
         st.pyplot(fig)
@@ -373,8 +371,8 @@ elif menu == "Data Exploration":
             x="over_time",
             y="actual_productivity",
             data=filtered_df,
+            alpha=0.6,
             ax=ax
-            alpha=0.6
         )
         ax.set_title("Over Time vs Actual Productivity")
         st.pyplot(fig)
@@ -386,8 +384,8 @@ elif menu == "Data Exploration":
             x="no_of_workers",
             y="actual_productivity",
             data=filtered_df,
+            alpha=0.6,
             ax=ax
-            alpha=0.6
         )
         ax.set_title("Workers vs Actual Productivity")
         st.pyplot(fig)
@@ -398,8 +396,8 @@ elif menu == "Data Exploration":
             x="incentive",
             y="actual_productivity",
             data=filtered_df,
+            alpha=0.6,
             ax=ax
-            alpha=0.6
         )
         ax.set_title("Incentive vs Actual Productivity")
         st.pyplot(fig)
