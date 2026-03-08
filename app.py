@@ -430,7 +430,7 @@ elif menu == "Data Exploration":
         x="day",
         y="actual_productivity",
         data=filtered_df,
-        order=["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        order=["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"],
         ax=ax,
     )
     ax.set_title("Actual Productivity by Day")
