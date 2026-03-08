@@ -617,13 +617,13 @@ elif menu == "Single Prediction":
         metric1, metric2, metric3 = st.columns(3)
         
         with metric1:
-        st.metric("Target Productivity", f"{target:.3f}")
+            st.metric("Target Productivity", f"{target:.3f}")
         
         with metric2:
-        st.metric("Predicted Productivity", f"{pred:.3f}")
+            st.metric("Predicted Productivity", f"{pred:.3f}")
         
         with metric3:
-        st.metric("Performance Gap", f"{gap:.3f}")
+            st.metric("Performance Gap", f"{gap:.3f}")
 
     if pred >= target:
         st.success("Status: On Track / Overachievement")
