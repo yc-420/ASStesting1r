@@ -328,10 +328,21 @@ elif menu == "Data Exploration":
         filtered_df = filtered_df[filtered_df["day"] == day_filter]
 
     st.write(f"Showing {len(filtered_df)} records")
-
+    
     if filtered_df.empty:
-        st.warning("No data available for the selected filters.")
-        st.stop()
+    st.warning("No data available for the selected filters.")
+    st.stop()
+    
+    colk1, colk2 = st.columns(2)
+    
+    with colk1:
+    st.metric("Filtered Records", len(filtered_df))
+    
+    with colk2:
+    st.metric(
+        "Average Productivity",
+        f"{filtered_df['actual_productivity'].mean():.3f}"
+    )
 
     fig, ax = plt.subplots(figsize=(8, 4))
     sns.histplot(filtered_df["actual_productivity"], bins=30, kde=True, ax=ax)
@@ -351,6 +362,7 @@ elif menu == "Data Exploration":
             y="actual_productivity",
             data=filtered_df,
             ax=ax
+            alpha=0.6
         )
         ax.set_title("Targeted vs Actual Productivity")
         st.pyplot(fig)
@@ -362,6 +374,7 @@ elif menu == "Data Exploration":
             y="actual_productivity",
             data=filtered_df,
             ax=ax
+            alpha=0.6
         )
         ax.set_title("Over Time vs Actual Productivity")
         st.pyplot(fig)
@@ -374,6 +387,7 @@ elif menu == "Data Exploration":
             y="actual_productivity",
             data=filtered_df,
             ax=ax
+            alpha=0.6
         )
         ax.set_title("Workers vs Actual Productivity")
         st.pyplot(fig)
@@ -385,6 +399,7 @@ elif menu == "Data Exploration":
             y="actual_productivity",
             data=filtered_df,
             ax=ax
+            alpha=0.6
         )
         ax.set_title("Incentive vs Actual Productivity")
         st.pyplot(fig)
@@ -593,26 +608,34 @@ elif menu == "Single Prediction":
     pred_df = pred_df[feature_cols].replace({True: 1, False: 0})
 
     if st.button("Predict"):
-        model = best_models[model_choice]
-        pred = float(model.predict(pred_df)[0])
+    model = best_models[model_choice]
+    pred = float(model.predict(pred_df)[0])
 
-        st.metric("Predicted actual_productivity", f"{pred:.4f}")
-        st.dataframe(pd.DataFrame([raw]), use_container_width=True)
+    target = targeted_productivity
+    gap = pred - target
 
-        target = targeted_productivity
-        gap = pred - target
+    st.write("### Prediction Result")
 
-        st.write("### Productivity Comparison")
-        st.write(f"Target Productivity: {target:.3f} ({target*100:.2f}%)")
-        st.write(f"Predicted Productivity: {pred:.3f} ({pred*100:.2f}%)")
-        st.write(f"Performance Gap: {gap:.3f}")
+    metric1, metric2, metric3 = st.columns(3)
 
-        if pred >= target:
-            st.success("Status: On Track / Overachievement")
-            st.info("The team is likely to achieve or exceed the targeted productivity.")
-        else:
-            st.warning("Status: Under Target")
-            st.info("The team may not reach the targeted productivity under the current production conditions.")
+    with metric1:
+        st.metric("Target Productivity", f"{target:.3f}")
+
+    with metric2:
+        st.metric("Predicted Productivity", f"{pred:.3f}")
+
+    with metric3:
+        st.metric("Performance Gap", f"{gap:.3f}")
+
+    if pred >= target:
+        st.success("Status: On Track / Overachievement")
+        st.info("The team is likely to achieve or exceed the targeted productivity.")
+    else:
+        st.warning("Status: Under Target")
+        st.info("The team may not reach the targeted productivity under the current production conditions.")
+
+    st.write("### Input Data")
+    st.dataframe(pd.DataFrame([raw]), use_container_width=True)
         
 elif menu == "Batch Prediction":
     st.header("Batch Prediction")
