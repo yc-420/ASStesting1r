@@ -330,19 +330,19 @@ elif menu == "Data Exploration":
     st.write(f"Showing {len(filtered_df)} records")
     
     if filtered_df.empty:
-    st.warning("No data available for the selected filters.")
-    st.stop()
+        st.warning("No data available for the selected filters.")
+        st.stop()
     
     colk1, colk2 = st.columns(2)
     
     with colk1:
-    st.metric("Filtered Records", len(filtered_df))
+        st.metric("Filtered Records", len(filtered_df))
     
     with colk2:
-    st.metric(
-        "Average Productivity",
-        f"{filtered_df['actual_productivity'].mean():.3f}"
-    )
+        st.metric(
+            "Average Productivity",
+            f"{filtered_df['actual_productivity'].mean():.3f}"
+        )
 
     fig, ax = plt.subplots(figsize=(8, 4))
     sns.histplot(filtered_df["actual_productivity"], bins=30, kde=True, ax=ax)
